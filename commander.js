@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var WebSocket = require('ws');
 
 function completer(line) {
-  var completions = 'connect signin chat-request help accept-chat-request message'.split(' ');
+  var completions = 'connect signin chat-request help accept-chat-request message signout status'.split(' ');
   var hits = completions.filter(function(c) { return c.indexOf(line) == 0 })
   // show all completions if none found
   return [hits.length ? hits : completions, line]
@@ -37,8 +37,11 @@ rl.on('line', function(line) {
       break;
 
     case 'signin':
-      var msg = JSON.stringify({'type': 'sign-in', 'username' : command[1]});
-      socket.send(msg);
+      var msg = {'type': 'sign-in', 'username' : command[1]};
+      if(command[2]) {
+        msg['password'] = command[2];
+      }
+      socket.send(JSON.stringify(msg));
       break;
 
     case 'chat-request':
@@ -53,6 +56,16 @@ rl.on('line', function(line) {
 
     case 'message':
       var msg = JSON.stringify({'type': 'message', 'chat-id' : command[1], 'message-id': command[2], 'message': command[3]});
+      socket.send(msg);
+      break;
+
+    case 'signout':
+      var msg = JSON.stringify({'type': 'sign-out', 'password' : command[1]});
+      socket.send(msg);
+      break;
+
+    case 'status':
+      var msg = JSON.stringify({'type': 'status'});
       socket.send(msg);
       break;
 

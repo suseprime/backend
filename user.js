@@ -14,6 +14,7 @@ User.prototype.sendMessage = function (message) {
 
 User.prototype.delete = function () {
   if(this.signedIn) {
+    console.log('signing out %s', this.username)
     for(var id in data.chats) {
       var chat = data.chats[id];
       if(chat.from == this.id) {
@@ -27,6 +28,16 @@ User.prototype.delete = function () {
     delete data.usernames[this.username];
   }
   data.sockets.splice(this.id);
+  this.username = null;
+  this.signedIn = false;
+};
+
+User.prototype.signIn = function (username) {
+  data.usernames[username] = this.id;
+  this.signedIn = true;
+  this.username = username;
+  console.log('User %s signed in', username);
+  this.sendMessage({'type': 'sign-in-accepted'});
 };
 
 module.exports = User;
