@@ -1,3 +1,4 @@
+var config = require('./config.js');
 var data = require('./data.js');
 var methods = require('./methods');
 var User = require('./user.js')
@@ -10,7 +11,7 @@ WebSocket.prototype.sendMessage = function (message) {
   this.send(JSON.stringify(message));
 };
 
-console.log('Server started. Listeningn at %s:%s/%s', wss.options.host, wss.options.port, wss.options.path == null ? "" : wss.options.path);
+console.log('Server started. Listening at %s:%s/%s', wss.options.host, wss.options.port, wss.options.path == null ? "" : wss.options.path);
 
 wss.on('error', function (e) {
   console.log(e);
@@ -19,19 +20,21 @@ wss.on('error', function (e) {
 wss.on('connection', function connection(ws) {
   // TODO: Use User class
   var user = new User(ws);
-  console.log('%d connected', user.id);
+  if(config.isDevelop())
+    console.log('%d connected', user.id);
   ws.on('message', function incoming(message) {
     try {
       var encmsg = JSON.parse(message);
-      console.log('received: "%s" from %d', message, user.id);
+      if(config.isDevelop())
+        console.log('received: "%s" from %d', message, user.id);
       var method = methods.getMethod(encmsg.type);
       if(method == null) {
-        console.log('Method of type ' + encmsg.type + ' not found.')
+        user.sendError('Method of type ' + encmsg,type + ' not found.');
         return;
       }
       if(method.hasOwnProperty('signInRequired')) {
         if(user.signedIn !== method.signInRequired) {
-          console.log('Try to process %s %ssigned in.', method.type, user.signedIn ? "" : "not ");
+          user.sendError('Try to process ' + method.type + (user.signedIn ? '' : ' not') + ' signed in.');
           return;
         }
       }
@@ -39,7 +42,7 @@ wss.on('connection', function connection(ws) {
       for(var i = 0; i < method.requiredParams.length; i++) {
         if(!encmsg.hasOwnProperty(method.requiredParams[i])) {
           // Missing argument
-          console.log('Missing argument %s.', method.requiredParams[i]);
+          user.sendError('Missing argument ' + method.requiredParams[i] + '.');
           return;
         }
       }
@@ -51,7 +54,8 @@ wss.on('connection', function connection(ws) {
   });
 
   ws.on('close', function() {
-    console.log('Connection #%d closed', user.id);
+    if(config.isDevelop())
+      console.log('Connection #%d closed', user.id);
     user.delete();
   });
 });

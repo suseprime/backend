@@ -1,4 +1,5 @@
 data = require('./data.js');
+config = require('./config.js');
 
 function User (ws) {
   this.ws = ws;
@@ -11,10 +12,18 @@ User.prototype.sendMessage = function (message) {
   this.ws.send(JSON.stringify(message));
 };
 
+User.prototype.sendError = function (msg) {
+  this.sendMessage({
+    'type': 'error',
+    'message': msg
+  });
+};
 
 User.prototype.delete = function () {
   if(this.signedIn) {
-    console.log('signing out %s', this.username)
+    if(config.isDevelop())
+      console.log('signing out %s', this.username);
+
     for(var id in data.chats) {
       var chat = data.chats[id];
       if(chat.from == this.id) {
@@ -36,7 +45,8 @@ User.prototype.signIn = function (username) {
   data.usernames[username] = this.id;
   this.signedIn = true;
   this.username = username;
-  console.log('User %s signed in', username);
+  if(config.isDevelop())
+    console.log('User %s signed in', username);
   this.sendMessage({'type': 'sign-in-accepted'});
 };
 
