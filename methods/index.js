@@ -1,3 +1,4 @@
+config = require('../config.js');
 fs = require('fs');
 
 var methods = {};
@@ -10,7 +11,8 @@ exports.scan = function () {
     }
     var method = require('./' + filename);
     if(!method.hasOwnProperty('type')) {
-      console.log(filename + ' - type prop does not exists, skipping');
+      if(config.isDevelop())
+        console.log(filename + ' - type prop does not exists, skipping');
       continue;
     }
     methods[method.type] = method;
