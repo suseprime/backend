@@ -23,7 +23,14 @@ rl.on('line', function(line) {
       break;
 
     case 'connect':
-      socket = new WebSocket('ws://localhost:8080');
+      var host =
+        'ws://' +
+        ((typeof command[1] !== 'undefined') ? command[1] : 'localhost') +
+        ':' +
+        ((typeof command[2] !== 'undefined') ? command [2] : '8080')
+      ;
+      console.log('Connecting to %s', host);
+      socket = new WebSocket(host);
       socket.on('open', function () {
         console.log('connected');
       });

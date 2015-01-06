@@ -5,7 +5,7 @@ var User = require('./user.js')
 
 var WebSocketServer = require('ws').Server;
 var WebSocket = require('./node_modules/ws/lib/WebSocket.js');
-var wss = new WebSocketServer({ port: 8080 });
+var wss = new WebSocketServer({port: config.port});
 
 WebSocket.prototype.sendMessage = function (message) {
   this.send(JSON.stringify(message));
