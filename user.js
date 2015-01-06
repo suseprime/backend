@@ -1,15 +1,31 @@
-data = require('./data.js');
-config = require('./config.js');
+var data = require('./data.js');
+var config = require('./config.js');
+var encrypt = require('./encrypt.js');
+var api = require('./api.js');
+
 
 function User (ws) {
   this.ws = ws;
   this.id = data.sockets.push(this) - 1;
   this.username = null;
   this.signedIn = false;
+
+  this.otr = encrypt.createOtr();
+
+  var user = this;
+  this.otr.on('ui', function (msg, encrypted) {
+    api.perform(msg, user);
+  });
+
+  this.otr.on('io', function (msg, meta) {
+    user.ws.send(msg);
+  });
+
+  this.otr.sendQueryMsg();
 }
 
 User.prototype.sendMessage = function (message) {
-  this.ws.send(JSON.stringify(message));
+  this.otr.sendMsg(JSON.stringify(message));
 };
 
 User.prototype.sendError = function (msg) {

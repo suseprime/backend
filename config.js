@@ -1,4 +1,4 @@
-var production = true;
+var production = false;
 
 var config = {
   env: production ? 'production' : 'development',
