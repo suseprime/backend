@@ -1,5 +1,30 @@
-var crypto = require('crypto');
 var WebSocket = require('ws');
+var DSA = require('otr').DSA;
+var OTR = require('otr').OTR;
+
+var myKey = new DSA();
+
+var options = {
+  fragment_size: 140
+  , send_interval: 200
+  , priv: myKey
+}
+
+var server = new OTR(options);
+
+server.on('ui', function (msg, encrypted) {
+  console.log("message to display to the user: " + msg)
+  // encrypted === true, if the received msg was encrypted
+})
+
+server.on('io', function (msg, meta) {
+  socket.send(msg);
+})
+
+server.on('error', function (err, severity) {
+  if (severity === 'error')  // either 'error' or 'warn'
+    console.error("error occurred: " + err)
+})
 
 function completer(line) {
   var completions = 'connect signin chat-request help accept-chat-request message signout status'.split(' ');
@@ -35,11 +60,12 @@ rl.on('line', function(line) {
         console.log('connected');
       });
       socket.on('message', function (data) {
-        console.log('Got: '+data);
+        server.receiveMsg(data);
+        // console.log('Got: '+data);
       });
       socket.on('close', function () {
         console.log('Connection closed.');
-        process.exit(0)
+        process.exit(0);
       });
       break;
 
@@ -48,32 +74,32 @@ rl.on('line', function(line) {
       if(command[2]) {
         msg['password'] = command[2];
       }
-      socket.send(JSON.stringify(msg));
+      server.sendMsg(JSON.stringify(msg));
       break;
 
     case 'chat-request':
       var msg = JSON.stringify({'type': 'chat-request', 'target-username' : command[1]});
-      socket.send(msg);
+      server.sendMsg(msg);
       break;
 
     case 'accept-chat-request':
       var msg = JSON.stringify({'type': 'chat-request-accepted', 'chat-id' : command[1]});
-      socket.send(msg);
+      server.sendMsg(msg);
       break;
 
     case 'message':
       var msg = JSON.stringify({'type': 'message', 'chat-id' : command[1], 'message-id': command[2], 'message': command[3]});
-      socket.send(msg);
+      server.sendMsg(msg);
       break;
 
     case 'signout':
       var msg = JSON.stringify({'type': 'sign-out', 'password' : command[1]});
-      socket.send(msg);
+      server.sendMsg(msg);
       break;
 
     case 'status':
       var msg = JSON.stringify({'type': 'status'});
-      socket.send(msg);
+      server.sendMsg(msg);
       break;
 
     default:
