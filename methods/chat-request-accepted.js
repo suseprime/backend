@@ -10,6 +10,10 @@ exports.callback = function (params, user) {
     user.sendError('Accepting non-existing chat');
     return;
   }
+  if(pendingChat['to'] !== user.id) {
+    user.sendError('Bad try to accept chat.');
+    return;
+  }
   var chatId = params['chat-id'];
   data.chats[chatId] = {'from':pendingChat['from'], 'to':pendingChat['to']};
   if(config.isDevelop())
