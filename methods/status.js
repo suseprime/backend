@@ -6,7 +6,8 @@ exports.callback = function (params, user) {
   var out = {
     'type': 'status',
     'signedIn': user.signedIn,
-    'username': user.username
+    'username': user.username,
+    'id': user.id
   };
   user.sendMessage(out);
 };
