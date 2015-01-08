@@ -6,7 +6,8 @@ var WebSocketServer = require('ws').Server;
 var WebSocket = require('./node_modules/ws/lib/WebSocket.js');
 var wss = new WebSocketServer({port: config.port});
 
-console.log('Server started. Listening at %s:%s/%s', wss.options.host, wss.options.port, wss.options.path == null ? "" : wss.options.path);
+if(config.isDevelop())
+  console.log('Server started. Listening at %s:%s/%s', wss.options.host, wss.options.port, wss.options.path == null ? "" : wss.options.path);
 
 wss.on('error', function (e) {
   console.log(e);
