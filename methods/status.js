@@ -7,7 +7,8 @@ exports.callback = function (params, user) {
     'type': 'status',
     'signedIn': user.signedIn,
     'username': user.username,
-    'id': user.id
+    'id': user.id,
+    'request-id': params['request-id']
   };
   user.sendMessage(out);
 };

@@ -20,6 +20,6 @@ exports.callback = function (params, user) {
       }
     }
   } else {
-    user.signIn(params.username)
+    user.signIn(params.username, params['request-id'])
   }
 };
