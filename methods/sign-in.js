@@ -12,7 +12,7 @@ exports.callback = function (params, user) {
       return;
     } else {
       if(params.password === data.reservedNicks[params.username]) {
-        user.signIn(params.username);
+        user.signIn(params.username, params['request-id']);
         delete data.reservedNicks[params.username];
       } else {
         user.sendError('Wrong log-in password.', params['request-id']);
