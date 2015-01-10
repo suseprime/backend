@@ -8,4 +8,5 @@ exports.callback = function (params, user) {
     data.reservedNicks[user.username] = params['password'];
   }
   user.delete();
+  user.sendMessage({'type': 'signed-out', 'request-id': params['request-id']});
 };
