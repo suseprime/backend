@@ -5,7 +5,7 @@ exports.requiredParams = ['chat-id', 'message', 'message-id'];
 exports.signInRequired = true;
 exports.callback = function (params, user) {
   if(data.chats[params['chat-id']] == null) {
-    user.sendError('Chat not requested.');
+    user.sendError('Chat not requested.', params['request-id']);
     return;
   }
   var chat = data.chats[params['chat-id']];
@@ -14,7 +14,7 @@ exports.callback = function (params, user) {
   } else if (chat.to == user.id) {
     var toId = chat.from;
   } else {
-    user.sendError('You don\'t participate in this chat.');
+    user.sendError('You don\'t participate in this chat.', params['request-id']);
   }
 
   data.sockets[toId].sendMessage({'type':'message', 'message': params.message, 'message-id': params['message-id'], 'chat-id': params['chat-id']});

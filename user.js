@@ -28,10 +28,11 @@ User.prototype.sendMessage = function (message) {
   this.otr.sendMsg(JSON.stringify(message));
 };
 
-User.prototype.sendError = function (msg) {
+User.prototype.sendError = function (msg, reqId) {
   this.sendMessage({
     'type': 'error',
-    'message': msg
+    'message': msg,
+    'request-id': reqId
   });
 };
 
