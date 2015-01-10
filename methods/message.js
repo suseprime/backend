@@ -18,5 +18,5 @@ exports.callback = function (params, user) {
   }
 
   data.sockets[toId].sendMessage({'type':'message', 'message': params.message, 'message-id': params['message-id'], 'chat-id': params['chat-id']});
-  user.sendMessage({'type':'message-sent', 'message-id': params['message-id']});
+  user.sendMessage({'type':'message-sent', 'message-id': params['message-id'], 'request-id': params['request-id']});
 };
