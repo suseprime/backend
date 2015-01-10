@@ -11,8 +11,10 @@ exports.callback = function (params, user) {
   var chat = data.chats[params['chat-id']];
   if(chat.from == user.id) {
     var toId = chat.to;
-  } else {
+  } else if (chat.to == user.id) {
     var toId = chat.from;
+  } else {
+    user.sendError('You don\'t participate in this chat.');
   }
 
   data.sockets[toId].sendMessage({'type':'message', 'message': params.message, 'message-id': params['message-id'], 'chat-id': params['chat-id']});
