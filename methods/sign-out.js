@@ -7,6 +7,6 @@ exports.callback = function (params, user) {
   if(params.hasOwnProperty('password')) {
     data.reservedNicks[user.username] = params['password'];
   }
-  user.delete();
   user.sendMessage({'type': 'signed-out', 'request-id': params['request-id']});
+  user.delete();
 };
