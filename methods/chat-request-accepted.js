@@ -19,5 +19,5 @@ exports.callback = function (params, user) {
   if(config.isDevelop())
     console.log(pendingChat);
   data.sockets[pendingChat.from].sendMessage({'type':'chat-established', 'chat-id': chatId, 'target-username': user.username});
-  user.sendMessage({'type': 'chat-established', 'chat-id': chatId, , 'request-id': params['request-id']})
+  user.sendMessage({'type': 'chat-established', 'chat-id': chatId, 'request-id': params['request-id']})
 };
