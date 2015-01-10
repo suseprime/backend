@@ -7,11 +7,11 @@ exports.signInRequired = true;
 exports.callback = function (params, user) {
   var pendingChat = data.pendingChats[params['chat-id']];
   if(pendingChat == null) {
-    user.sendError('Accepting non-existing chat');
+    user.sendError('Accepting non-existing chat', params['request-id']);
     return;
   }
   if(pendingChat['to'] !== user.id) {
-    user.sendError('Bad try to accept chat.');
+    user.sendError('Bad try to accept chat.', params['request-id']);
     return;
   }
   var chatId = params['chat-id'];

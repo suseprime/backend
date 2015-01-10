@@ -10,12 +10,12 @@ Api.perform = function (message, user) {
       console.log('received: "%s" from %d', message, user.id);
     var method = methods.getMethod(encmsg.type);
     if(method == null) {
-      user.sendError('Method of type ' + encmsg,type + ' not found.');
+      user.sendError('Method of type ' + encmsg,type + ' not found.', encmsg['request-id']);
       return;
     }
     if(method.hasOwnProperty('signInRequired')) {
       if(user.signedIn !== method.signInRequired) {
-        user.sendError('Try to process ' + method.type + (user.signedIn ? '' : ' not') + ' signed in.');
+        user.sendError('Try to process ' + method.type + (user.signedIn ? '' : ' not') + ' signed in.', encmsg['request-id']);
         return;
       }
     }
@@ -23,7 +23,7 @@ Api.perform = function (message, user) {
     for(var i = 0; i < method.requiredParams.length; i++) {
       if(!encmsg.hasOwnProperty(method.requiredParams[i])) {
         // Missing argument
-        user.sendError('Missing argument ' + method.requiredParams[i] + '.');
+        user.sendError('Missing argument ' + method.requiredParams[i] + '.', encmsg['request-id']);
         return;
       }
     }

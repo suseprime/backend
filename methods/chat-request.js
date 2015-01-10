@@ -11,6 +11,6 @@ exports.callback = function (params, user) {
     data.pendingChats[chatId] = {'from': user.id, 'to': targetId};
     data.sockets[targetId].sendMessage({'type':'chat-request', 'from-username':user.username, 'chat-id': chatId});
   } else {
-    user.sendError('User ' + targetUsername + ' not signed in.');
+    user.sendError('User ' + targetUsername + ' not signed in.', params['request-id']);
   }
 };
