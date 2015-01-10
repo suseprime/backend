@@ -58,13 +58,13 @@ User.prototype.delete = function () {
   this.signedIn = false;
 };
 
-User.prototype.signIn = function (username) {
+User.prototype.signIn = function (username, reqId) {
   data.usernames[username] = this.id;
   this.signedIn = true;
   this.username = username;
   if(config.isDevelop())
     console.log('User %s signed in', username);
-  this.sendMessage({'type': 'sign-in-accepted'});
+  this.sendMessage({'type': 'sign-in-accepted', 'request-id': reqId});
 };
 
 module.exports = User;
