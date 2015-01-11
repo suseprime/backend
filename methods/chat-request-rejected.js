@@ -18,5 +18,5 @@ exports.callback = function (params, user) {
   delete data.pendingChats[params['chat-id']];
   if(config.isDevelop()) console.log(pendingChat);
   data.sockets[pendingChat.from].sendMessage({'type':'chat-rejected', 'chat-id': chatId, 'target-username': user.username});
-  user.sendMessage({'type': 'chat-request-rejected-sucessed', 'chat-id': chatId, 'request-id': params['request-id']})
+  user.sendMessage({'type': 'chat-request-rejected-successed', 'chat-id': chatId, 'request-id': params['request-id']})
   };
