@@ -2,7 +2,7 @@ DSA = require('otr').DSA;
 OTR = require('otr').OTR;
 
 exports.options = {
-  fragment_size: 140,
+  fragment_size: 65536,
   send_interval: 200
 };
 
