@@ -1,4 +1,4 @@
-var production = false;
+var production = process.env.NODE_ENV === 'production';
 
 var config = {
   env: production ? 'production' : 'development',
