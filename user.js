@@ -51,6 +51,18 @@ User.prototype.delete = function () {
         delete data.chats[id];
       }
     }
+
+    for(var id in data.pendingChats) {
+      var chat = data.pendingChats[id];
+      if(chat.from == this.id) {
+        data.sockets[chat.to].sendMessage({'type':'chat-closed', 'chat-id':id});
+        delete data.pendingChats[id];
+      } else if (chat.to === this.id) {
+        data.sockets[chat.from].sendMessage({'type':'chat-closed', 'chat-id':id});
+        delete data.pendingChats[id];
+      }
+    }
+
     delete data.usernames[this.username];
   }
   data.sockets.splice(this.id);
