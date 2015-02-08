@@ -12,5 +12,7 @@
   "subdomain": "suseprime-backend",
   "engines": {
     "node": "0.10.x"
-  }
+  },
+  "private": true,
+  "main": "server.js"
 }
