@@ -1,4 +1,4 @@
-var production = process.env.NODE_ENV === 'production' || process.env.OPENSHIFT_NODEJS_VERSION;
+var production = process.env.NODE_ENV === 'production';
 
 var config = {
   env: production ? 'production' : 'development',
